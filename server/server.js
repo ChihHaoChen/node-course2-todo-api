@@ -1,4 +1,4 @@
-
+const { ObjectID } = require('mongodb');
 const express = require('express');
 const bodyParser = require('body-parser');
 
@@ -38,6 +38,27 @@ app.get('/todos', (req, res) => {
 
 // some useful comments to avoid the testing error
 // Uncaught error outside test suite// Uncaught Error: listen EADDRINUSE :::3000
+app.get('/todos/:id', (req, res) => {
+  const id = req.params.id;
+
+  // 1st step : check if the id is valid or not by isValid
+  if (!ObjectID.isValid(id)) {
+    return res.status(404).send('The data with this ID is not available.');
+  }
+  else {
+    Todo.findById(id).then((todo) => {
+      if (!todo) {
+        res.status(404).send();
+      } else {
+        // res.status(200).send(JSON.stringify(todo, undefined, 2));
+        res.status(200).send({todo});
+      }
+    }, (err) => {
+      res.status(400).send();
+    });
+  }
+});
+
 
 if(!module.parent) {
   app.listen(3000, () => {

@@ -30,6 +30,8 @@ const userId = '5a5d6a62fd05a004563579b7';
 //   console.log('Todo by Id', todo);
 // }).catch((e) => console.log(e));
 
+//There are two ways to get the error message from the callback functions.
+// 1. By catch(e)
 // User.findById(userId).then((user) => {
 //   if (!user) {
 //     return console.log('The user with this id is not found.')
