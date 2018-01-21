@@ -8,7 +8,10 @@
     "test": "mocha server/**/*.test.js",
     "test-watch": "nodemon --exec 'npm test'"
   },
-  "author": "",
+  "engine"" {
+    "node": "9.3.0"
+  },
+  "author": "Chih-Hao Chen",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.18.2",

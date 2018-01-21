@@ -61,6 +61,28 @@ app.get('/todos/:id', (req, res) => {
   }
 });
 
+app.delete('/todos/:id', (req, res) => {
+  // get the id
+  const id = req.params.id;
+  // Validate the id -> if not valid, return 404
+  if(!ObjectID.isValid(id)) {
+    return res.status(404).send('The data with this ID is not available.');
+  } else {
+    // remove todo by ID
+    Todo.findByIdAndRemove(id).then((todo) => {
+      if(!todo) {
+        res.status(404).send();
+      }
+      else {
+        res.status(200).send(todo);
+      }
+    }, (err) => {
+      // error, and send status(400) and empty body
+      res.status(400).send();
+    });
+  }
+});
+
 
 if(!module.parent) {
   app.listen(port, () => {
