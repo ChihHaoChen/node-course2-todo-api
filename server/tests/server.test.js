@@ -10,7 +10,9 @@ const todos = [{
   text: 'First test todo'
 }, {
   _id: new ObjectID(),
-  text: 'Second test todo'
+  text: 'Second test todo',
+  completed: true,
+  completedAt: 333
 }];
 
 beforeEach((done) => {
@@ -117,7 +119,7 @@ describe('DELETE /todos/:id', () => {
           return done(err);
         }
         Todo.findById(hexId).then((todo) => {
-          expect(todo).toBeNull(); // change toNotExist -> toBeNull
+          expect(todo).toBeFalsy(); // change toNotExist -> toBeNull, or toBeFalsy
           done();
         }).catch((e) => done(e));
       });
@@ -138,4 +140,53 @@ describe('DELETE /todos/:id', () => {
       .expect(404)
       .end(done);
   });
+});
+
+describe('PATCH /todos/:id', () => {
+  it('Should update the todo', (done) => {
+    // grab the id of the first item
+    let hexId = todos[0]._id.toHexString();
+    // update text, set completed true
+    let text = 'Text to be updated for test';
+    let completed = true;
+
+    request(app)
+      .patch(`/todos/${hexId}`)
+      .send({ text, completed }) // Use ES6
+    //200
+      .expect(200)
+      .expect((res) => {
+        expect(res.body.todo._id).toBe(hexId);
+        expect(res.body.todo.text).toBe(text);
+        expect(res.body.todo.completed).toBe(true);
+        expect(typeof res.body.todo.completedAt).toBe('number');
+        // expect(res.body.todo.text).toBe(text);
+      })
+      // text is changed, completed is true, completed is a number, toBeA
+      .end(done);
+    });
+
+    it('Should clear completedAt when todo is not completed', (done) => {
+      // grab the id of second todo item
+      let hexId = todos[1]._id.toHexString();
+      // update the text, set completed to false
+      let text = 'Change the state of completed from True to False';
+      let completed = false;
+
+      request(app)
+        .patch(`/todos/${hexId}`)
+        .send({ text, completed }) // Use ES6
+      //200
+        .expect(200)
+      // text is changed, completed false, completedAt is null .toNotExist
+        .expect((res) => {
+          expect(res.body.todo._id).toBe(hexId);
+          expect(res.body.todo.text).toBe(text);
+          expect(res.body.todo.completed).toBe(false);
+          expect(res.body.todo.completedAt).toBeFalsy();
+        })
+      // text is changed, completed is true, completed is a number, toBeA
+        .end(done);
+    });
+
 });
