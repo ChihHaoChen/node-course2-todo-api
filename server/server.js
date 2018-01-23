@@ -1,5 +1,5 @@
 require('./config/config');
-
+const jwt = require('jsonwebtoken');
 const _ = require('lodash');
 const { ObjectID } = require('mongodb');
 const express = require('express');
@@ -34,12 +34,6 @@ app.get('/todos', (req, res) => {
     res.status(400).send(e);
   });
 });
-
-// Get /todos/123kkkdfs
-
-// app.listen(3000, () => {
-//   console.log(`Start on port 3000.`);
-// });
 
 // some useful comments to avoid the testing error
 // Uncaught error outside test suite// Uncaught Error: listen EADDRINUSE :::3000
@@ -111,6 +105,19 @@ app.patch('/todos/:id', (req, res) => {
   });
 });
 
+// POST/users
+app.post('/users', (req, res) => {
+  let user = new User(_.pick(req.body, ['email', 'password']));
+  
+  user.save().then(() => {
+    return user.generateAuthToken();
+    //res.send(user);
+  }).then((token) => {
+    res.header('x-auth', token).send(user)
+  }).catch((e) => {
+    res.status(400).send(e);
+  });
+});
 
 //if(!module.parent) {
   app.listen(port, () => {
