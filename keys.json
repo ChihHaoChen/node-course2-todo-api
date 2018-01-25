@@ -1,0 +1,8 @@
+{
+  "mongoHost": "ds111568.mlab.com",
+  "mongoPort": "11568",
+  "mongoDatabase": "todo_api",
+  "mongoUser": "chao0716",
+  "mongoPass": "Monkland4410"
+
+}
