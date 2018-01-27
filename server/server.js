@@ -120,10 +120,20 @@ app.post('/users', (req, res) => {
   });
 });
 
-
 app.get('/users/me', authenticate, (req, res) => {
   // get the value by req.header with the key 'x-auth'
   res.send(req.user);
+});
+
+// POST /users/login(email, body)
+app.post('/users/login', (req, res) => {
+  let user = new User(_.pick(req.body, ['email', 'password']));
+
+  User.findByCredentials(body.email, body.password).then((user) => {
+    res.send(user);
+  }).catch((e) => {
+    res.status(400).send();
+  });
 });
 
 //if(!module.parent) {
@@ -131,4 +141,5 @@ app.get('/users/me', authenticate, (req, res) => {
     console.log(`Started up at port ${port}.`);
   });
 //}
+
 module.exports = { app }; //since the module we want to export also called app
