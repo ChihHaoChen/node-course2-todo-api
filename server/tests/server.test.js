@@ -199,7 +199,7 @@ describe('PATCH /todos/:id', () => {
       .end(done);
     });
 
-    it('Should not update the todo', (done) => {
+    it('Should not update the todo created by other users', (done) => {
       // grab the id of the first item
       let hexId = todos[0]._id.toHexString();
       // update text, set completed true
